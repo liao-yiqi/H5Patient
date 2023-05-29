@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type Method } from "axios";
 import { useUserStore } from "@/stores";
 import { showToast } from "vant";
 import router from "@/router";
@@ -49,4 +49,20 @@ instance.interceptors.response.use(
     return Promise.reject(err);
   }
 );
-export { baseURL, instance };
+// 封装函数,不用每次发送请求都要写泛型
+//所有请求数据的结构
+type Data<T> = {
+  code: string;
+  message: string;
+  data: T;
+};
+//函数的封装
+const request = async <T>(url: string, method: Method, data: object) => {
+  const dataKey = method.toLocaleLowerCase() === "get" ? "params" : "data";
+  return instance<T, Data<T>>({
+    url,
+    method,
+    [dataKey]: data
+  });
+};
+export { baseURL, instance, request };
