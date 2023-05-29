@@ -1,4 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { mobileRules, passwordRules } from "@/utils/rules";
+import { ref } from "vue";
+const mobile = ref("");
+const password = ref("");
+</script>
 
 <template>
   <div class="login-page">
@@ -13,8 +18,18 @@
     </div>
     <!-- 表单 -->
     <van-form autocomplete="off">
-      <van-field placeholder="请输入手机号" type="tel"></van-field>
-      <van-field placeholder="请输入密码" type="password"></van-field>
+      <van-field
+        :rules="mobileRules"
+        v-model="mobile"
+        placeholder="请输入手机号"
+        type="tel"
+      ></van-field>
+      <van-field
+        v-model="password"
+        :rules="passwordRules"
+        placeholder="请输入密码"
+        type="password"
+      ></van-field>
       <div class="cp-cell">
         <van-checkbox>
           <span>我已同意</span>
