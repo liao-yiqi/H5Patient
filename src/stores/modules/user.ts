@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { User } from "@/types/user";
 import { ref } from "vue";
-defineStore(
+export const useUserStore = defineStore(
   "cp-user",
   () => {
     //用户信息
