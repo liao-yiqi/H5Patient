@@ -2,7 +2,7 @@
 export interface User {
   /** token令牌 */
   token: string;
-  refshToken: string;
+  refreshToken: string;
   /** 用户ID */
   id: string;
   /** 用户名称 */

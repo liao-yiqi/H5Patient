@@ -2,14 +2,16 @@ import axios from "axios";
 import { useUserStore } from "@/stores";
 import { showToast } from "vant";
 import router from "@/router";
-const store = useUserStore();
+
+const baseURL = "https://consult-api.itheima.net/";
 const instance = axios.create({
-  baseURL: "https://consult-api.itheima.net/",
+  baseURL,
   timeout: 5000
 });
 //请求拦截器
 instance.interceptors.request.use(
   (config) => {
+    const store = useUserStore();
     if (store.user?.token && config.headers) {
       config.headers.Authorization = store.user.token;
     }
@@ -47,3 +49,4 @@ instance.interceptors.response.use(
     return Promise.reject(err);
   }
 );
+export { baseURL, instance };
