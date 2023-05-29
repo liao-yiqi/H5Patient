@@ -13,7 +13,7 @@ import { Button as VantButton } from "vant";
       <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
       <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>. What's next?
     </h3>
-    <VantButton>按钮</VantButton>
+    <VantButton type="primary">按钮</VantButton>
   </div>
 </template>
 
