@@ -1,8 +1,28 @@
 <script setup lang="ts">
 import { mobileRules, passwordRules } from "@/utils/rules";
+import { useRoute, useRouter } from "vue-router";
+import { loginByPassword } from "@/services/user";
 import { ref } from "vue";
-const mobile = ref("");
-const password = ref("");
+import { showFailToast, showSuccessToast } from "vant";
+import { useUserStore } from "@/stores/modules/user";
+const route = useRoute();
+const router = useRouter();
+const store = useUserStore();
+const mobile = ref("13230000005");
+const password = ref("abc12345");
+const argee = ref(false);
+const login = async () => {
+  // 判断是否勾选用户协议
+  if (!argee.value) return showFailToast("请先同意用户协议");
+  const res = await loginByPassword(mobile.value, password.value);
+  //存数据
+  store.setUser(res.data);
+  //跳转页面
+  router.push((route.query.returnUrl as string) || "/");
+  // 提示用户
+  showSuccessToast("登录成功");
+  console.log(res);
+};
 </script>
 
 <template>
@@ -17,7 +37,7 @@ const password = ref("");
       </a>
     </div>
     <!-- 表单 -->
-    <van-form autocomplete="off">
+    <van-form autocomplete="off" @submit="login">
       <van-field
         :rules="mobileRules"
         v-model="mobile"
@@ -31,7 +51,7 @@ const password = ref("");
         type="password"
       ></van-field>
       <div class="cp-cell">
-        <van-checkbox>
+        <van-checkbox v-model="argee">
           <span>我已同意</span>
           <a href="javascript:;">用户协议</a>
           <span>及</span>
@@ -39,7 +59,7 @@ const password = ref("");
         </van-checkbox>
       </div>
       <div class="cp-cell">
-        <van-button block round type="primary">登 录</van-button>
+        <van-button block round type="primary" native-type="submit">登 录</van-button>
       </div>
       <div class="cp-cell">
         <a href="javascript:;">忘记密码？</a>
