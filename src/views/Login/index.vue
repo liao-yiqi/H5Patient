@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { mobileRules, passwordRules, codeRules } from "@/utils/rules";
 import { useRoute, useRouter } from "vue-router";
-import { loginByPassword, sendMobileCode } from "@/services/user";
+import { loginByPassword, sendMobileCode, loginByCode } from "@/services/user";
 import { ref } from "vue";
 import { showFailToast, showSuccessToast } from "vant";
 import { useUserStore } from "@/stores/modules/user";
@@ -19,7 +19,9 @@ let timeId: number;
 const login = async () => {
   // 判断是否勾选用户协议
   if (!argee.value) return showFailToast("请先同意用户协议");
-  const res = await loginByPassword(mobile.value, password.value);
+  const res = isPass.value
+    ? await loginByPassword(mobile.value, password.value)
+    : await loginByCode(mobile.value, code.value);
   //存数据
   store.setUser(res.data);
   //跳转页面
