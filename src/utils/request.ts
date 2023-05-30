@@ -13,7 +13,7 @@ instance.interceptors.request.use(
   (config) => {
     const store = useUserStore();
     if (store.user?.token && config.headers) {
-      config.headers.Authorization = store.user.token;
+      config.headers.Authorization = "Bearer " + store.user.token;
     }
     return config;
   },

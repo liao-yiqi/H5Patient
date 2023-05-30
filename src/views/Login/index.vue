@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { mobileRules, passwordRules, codeRules } from "@/utils/rules";
 import { useRoute, useRouter } from "vue-router";
-import { loginByPassword } from "@/services/user";
+import { loginByPassword, sendMobileCode } from "@/services/user";
 import { ref } from "vue";
 import { showFailToast, showSuccessToast } from "vant";
 import { useUserStore } from "@/stores/modules/user";
@@ -23,6 +23,11 @@ const login = async () => {
   router.push((route.query.returnUrl as string) || "/");
   // 提示用户
   showSuccessToast("登录成功");
+  console.log(res);
+};
+//发送验证码
+const sendCode = async () => {
+  const res = await sendMobileCode(mobile.value, "login");
   console.log(res);
 };
 </script>
@@ -56,7 +61,7 @@ const login = async () => {
       ></van-field>
       <van-field v-model="code" :rules="codeRules" v-else placeholder="短信验证码">
         <template #button>
-          <span class="btn-send">发送验证码</span>
+          <span class="btn-send" @click="sendCode">发送验证码</span>
         </template>
       </van-field>
       <div class="cp-cell">
