@@ -57,7 +57,7 @@ type Data<T> = {
   data: T;
 };
 //函数的封装
-const request = async <T>(url: string, method: Method, data: object) => {
+const request = async <T>(url: string, method: Method = "get", data?: object) => {
   const dataKey = method.toLocaleLowerCase() === "get" ? "params" : "data";
   return instance<T, Data<T>>({
     url,
