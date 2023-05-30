@@ -5,6 +5,7 @@ import { loginByPassword, sendMobileCode } from "@/services/user";
 import { ref } from "vue";
 import { showFailToast, showSuccessToast } from "vant";
 import { useUserStore } from "@/stores/modules/user";
+import { onUnmounted } from "vue";
 const route = useRoute();
 const router = useRouter();
 const store = useUserStore();
@@ -13,6 +14,8 @@ const password = ref("abc12345");
 const argee = ref(false);
 const isPass = ref(true);
 const code = ref("");
+const time = ref(0);
+let timeId: number;
 const login = async () => {
   // 判断是否勾选用户协议
   if (!argee.value) return showFailToast("请先同意用户协议");
@@ -25,11 +28,23 @@ const login = async () => {
   showSuccessToast("登录成功");
   console.log(res);
 };
+
 //发送验证码
 const sendCode = async () => {
+  if (time.value > 0) return;
   const res = await sendMobileCode(mobile.value, "login");
-  console.log(res);
+  showSuccessToast("发送成功");
+  code.value = res.data.code;
+  console.log(res.data.code);
+  time.value = 60;
+  timeId = setInterval(() => {
+    time.value--;
+    if (time.value <= 0) window.clearInterval(timeId);
+  }, 1000);
 };
+onUnmounted(() => {
+  window.clearInterval(timeId);
+});
 </script>
 
 <template>
@@ -61,7 +76,9 @@ const sendCode = async () => {
       ></van-field>
       <van-field v-model="code" :rules="codeRules" v-else placeholder="短信验证码">
         <template #button>
-          <span class="btn-send" @click="sendCode">发送验证码</span>
+          <span class="btn-send" :class="{ active: time > 0 }" @click="sendCode">{{
+            time > 0 ? `${time}秒后重新发送` : "发送验证码"
+          }}</span>
         </template>
       </van-field>
       <div class="cp-cell">

@@ -6,5 +6,5 @@ export const loginByPassword = (mobile: string, password: string) => {
 };
 //发送验证码
 export const sendMobileCode = (mobile: string, type: CodeType) => {
-  return request("/code", "get", { mobile, type });
+  return request<{ code: string }>("/code", "get", { mobile, type });
 };
