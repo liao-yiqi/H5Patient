@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { mobileRules, passwordRules } from "@/utils/rules";
+import { mobileRules, passwordRules, codeRules } from "@/utils/rules";
 import { useRoute, useRouter } from "vue-router";
 import { loginByPassword } from "@/services/user";
 import { ref } from "vue";
@@ -11,6 +11,8 @@ const store = useUserStore();
 const mobile = ref("13230000005");
 const password = ref("abc12345");
 const argee = ref(false);
+const isPass = ref(true);
+const code = ref("");
 const login = async () => {
   // 判断是否勾选用户协议
   if (!argee.value) return showFailToast("请先同意用户协议");
@@ -30,12 +32,13 @@ const login = async () => {
     <cp-nav-bar right-text="注册" @click-right="$router.push('/register')"></cp-nav-bar>
     <!-- 头部 -->
     <div class="login-head">
-      <h3>密码登录</h3>
-      <a href="javascript:;">
-        <span>短信验证码登录</span>
+      <h3>{{ isPass ? "密码登录" : "短信验证码登录" }}</h3>
+      <a href="javascript:;" @click="isPass = !isPass">
+        <span>{{ !isPass ? "密码登录" : "短信验证码登录" }}</span>
         <van-icon name="arrow"></van-icon>
       </a>
     </div>
+
     <!-- 表单 -->
     <van-form autocomplete="off" @submit="login">
       <van-field
@@ -45,11 +48,17 @@ const login = async () => {
         type="tel"
       ></van-field>
       <van-field
+        v-if="isPass"
         v-model="password"
         :rules="passwordRules"
         placeholder="请输入密码"
         type="password"
       ></van-field>
+      <van-field v-model="code" :rules="codeRules" v-else placeholder="短信验证码">
+        <template #button>
+          <span class="btn-send">发送验证码</span>
+        </template>
+      </van-field>
       <div class="cp-cell">
         <van-checkbox v-model="argee">
           <span>我已同意</span>
