@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "@/stores/modules/user";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+NProgress.configure({
+  showSpinner: false
+});
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +46,8 @@ const router = createRouter({
 });
 //前置路由守卫
 router.beforeEach((to) => {
+  //加载进度
+  NProgress.start();
   // 用户仓库
   const store = useUserStore();
   // 不需要登录的页面，白名单
@@ -52,5 +59,6 @@ router.beforeEach((to) => {
 //后置路由守卫
 router.afterEach((to) => {
   document.title = `${to.meta.title}-优医问诊`;
+  NProgress.done();
 });
 export default router;
