@@ -16,6 +16,7 @@ const isPass = ref(true);
 const code = ref("");
 const time = ref(0);
 let timeId: number;
+const showPass = ref(false);
 const login = async () => {
   // 判断是否勾选用户协议
   if (!argee.value) return showFailToast("请先同意用户协议");
@@ -74,8 +75,12 @@ onUnmounted(() => {
         v-model="password"
         :rules="passwordRules"
         placeholder="请输入密码"
-        type="password"
-      ></van-field>
+        :type="showPass ? 'text' : 'password'"
+      >
+        <template #button>
+          <cp-icon @click="showPass = !showPass" :name="`login-eye-${showPass ? 'on' : 'off'}`" />
+        </template>
+      </van-field>
       <van-field v-model="code" :rules="codeRules" v-else placeholder="短信验证码">
         <template #button>
           <span class="btn-send" :class="{ active: time > 0 }" @click="sendCode">{{
