@@ -35,7 +35,7 @@ export interface UserInfo {
   };
 }
 
-//患者列表类型
+//单个患者信息
 export interface Patient {
   /** 患者ID */
   id: string;
@@ -52,5 +52,5 @@ export interface Patient {
   /** 年龄 */
   age: number;
 }
-
+//患者列表类型
 export type PatientList = Patient[];
