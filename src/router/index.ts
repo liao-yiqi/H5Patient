@@ -9,12 +9,14 @@ NProgress.configure({
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    //登录
     {
       path: "/Login",
       name: "Login",
       component: () => import("../views/Login/index.vue"),
       meta: { title: "登录" }
     },
+    //底部导航
     {
       path: "/",
       component: () => import("@/views/Layout/index.vue"),
@@ -41,6 +43,12 @@ const router = createRouter({
           meta: { title: "个人中心" }
         }
       ]
+    },
+    //家庭档案
+    {
+      path: "/user/patient",
+      component: () => import("@/views/User/PatientPage.vue"),
+      meta: { title: "家庭档案" }
     }
   ]
 });
