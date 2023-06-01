@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { getPatientList } from "@/services/user";
-import type { PatientList } from "@/types/user";
+import type { PatientList, Patient } from "@/types/user";
 import { onMounted, ref, computed } from "vue";
 import { nameRules, idCardRules } from "@/utils/rules";
-import { showConfirmDialog, type FormInstance } from "vant";
+import { showConfirmDialog, type FormInstance, showSuccessToast } from "vant";
+import { addPatient } from "@/services/user";
 onMounted(() => {
   getPatient();
 });
@@ -27,13 +28,13 @@ const closePopup = () => {
   show.value = false;
 };
 //清空表单
-const patientBackup = {
+const patientBackup: Patient = {
   name: "",
   idCard: "",
   gender: 1,
   defaultFlag: 0
 };
-const patient = ref({
+const patient = ref<Patient>({
   ...patientBackup
 });
 //计算属性处理默认值
@@ -66,7 +67,10 @@ const submit = async () => {
       message: "性别和身份证号不一致, 确认提交吗?"
     });
   }
-  console.log("真实提交");
+  await addPatient(patient.value);
+  showSuccessToast("添加成功");
+  getPatient();
+  closePopup();
 };
 </script>
 
