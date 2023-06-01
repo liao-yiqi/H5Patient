@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { getPatientList } from "@/services/user";
-import type { PatientList, Patient } from "@/types/user";
+import type { PatientList } from "@/types/user";
 import { onMounted, ref, computed } from "vue";
+import { nameRules, idCardRules } from "@/utils/rules";
+import { showConfirmDialog, type FormInstance } from "vant";
 onMounted(() => {
   getPatient();
 });
@@ -51,6 +53,21 @@ const defaultFlag = computed({
     patient.value.defaultFlag = value ? 1 : 0;
   }
 });
+//表单提交验证
+const form = ref<FormInstance>();
+const submit = async () => {
+  // 格式校验
+  await form.value?.validate();
+  // 性别校验
+  const idCardGender = +patient.value.idCard.slice(-2, -1) % 2;
+  if (idCardGender !== patient.value.gender) {
+    await showConfirmDialog({
+      title: "温馨提示",
+      message: "性别和身份证号不一致, 确认提交吗?"
+    });
+  }
+  console.log("真实提交");
+};
 </script>
 
 <template>
@@ -75,10 +92,20 @@ const defaultFlag = computed({
     </div>
     <!-- 侧边栏 -->
     <van-popup v-model:show="show" position="right">
-      <cp-nav-bar title="添加患者" right-text="保存" :back="closePopup" />
+      <cp-nav-bar @click-right="submit" title="添加患者" right-text="保存" :back="closePopup" />
       <van-form autocomplete="off" ref="form">
-        <van-field v-model="patient.name" label="真实姓名" placeholder="请输入真实姓名" />
-        <van-field v-model="patient.idCard" label="身份证号" placeholder="请输入身份证号" />
+        <van-field
+          :rules="nameRules"
+          v-model="patient.name"
+          label="真实姓名"
+          placeholder="请输入真实姓名"
+        />
+        <van-field
+          :rules="idCardRules"
+          v-model="patient.idCard"
+          label="身份证号"
+          placeholder="请输入身份证号"
+        />
         <van-field label="性别" class="pb4">
           <!-- 单选按钮组件 -->
           <template #input>
