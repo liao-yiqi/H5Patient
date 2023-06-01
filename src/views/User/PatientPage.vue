@@ -10,6 +10,19 @@ const getPatient = async () => {
   const { data } = await getPatientList();
   PatientList.value = data;
 };
+const options = [
+  { label: "男", value: 1 },
+  { label: "女", value: 0 }
+];
+const gender = ref(1);
+//打开侧滑栏
+const show = ref(false);
+const showPopup = () => {
+  show.value = true;
+};
+const closePopup = () => {
+  show.value = false;
+};
 </script>
 
 <template>
@@ -26,18 +39,29 @@ const getPatient = async () => {
         <div class="icon"><cp-icon name="user-edit" /></div>
         <div class="tag" v-if="item.defaultFlag">默认</div>
       </div>
-      <div class="patient-add">
+      <div class="patient-add" v-if="PatientList.length < 6" @click="showPopup()">
         <cp-icon name="user-add" />
         <p>添加患者</p>
       </div>
       <div class="patient-tip">最多可添加 6 人</div>
     </div>
+    <!-- 侧边栏 -->
+    <van-popup v-model:show="show" position="right">
+      <cp-nav-bar title="添加患者" right-text="保存" :back="closePopup"></cp-nav-bar>
+    </van-popup>
   </div>
+  <cp-radio-btn :options="options" v-model="gender"></cp-radio-btn>
 </template>
 
 <style lang="scss" scoped>
 .patient-page {
   padding: 46px 0 80px;
+  :deep() {
+    .van-popup {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
 .patient-list {
   padding: 15px;

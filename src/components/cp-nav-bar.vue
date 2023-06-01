@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-defineProps<{
+const props = defineProps<{
   title?: string;
   rightText?: string;
+  back?: () => void;
 }>();
 const emit = defineEmits<{
   (e: "click-right"): void;
@@ -10,6 +11,7 @@ const emit = defineEmits<{
 const router = useRouter();
 const onClickLeft = () => {
   // TODO 点击左侧返回按钮
+  if (props.back) return props.back();
   // 判断历史记录中是否有回退
   if (history.state?.back) {
     router.back();
