@@ -2,11 +2,16 @@
 import type { UserInfo } from "@/types/user";
 import { getUserInfo } from "@/services/user";
 import { ref, onMounted } from "vue";
+import { useUserStore } from "@/stores/modules/user";
+import { showConfirmDialog } from "vant";
+import { useRouter } from "vue-router";
 const userInfo = ref<UserInfo>();
+//数据获取
 onMounted(async () => {
   const { data } = await getUserInfo();
   userInfo.value = data;
 });
+//快捷工具区域
 const tools = [
   { label: "我的问诊", path: "/user/consult" },
   { label: "我的处方", path: "/" },
@@ -16,6 +21,17 @@ const tools = [
   { label: "官方客服", path: "/" },
   { label: "设置", path: "/" }
 ];
+//退出功能
+const store = useUserStore();
+const router = useRouter();
+const logOut = async () => {
+  await await showConfirmDialog({
+    title: "提示",
+    message: "确定要退出吗"
+  });
+  store.delUser();
+  router.push("/login");
+};
 </script>
 
 <template>
@@ -92,6 +108,7 @@ const tools = [
         <template #icon><cp-icon :name="`user-tool-0${i + 1}`" /></template>
       </van-cell>
     </div>
+    <a class="logout" href="javascript:;" @click="logOut">退出登录</a>
   </div>
   >
 </template>
