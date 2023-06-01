@@ -12,8 +12,10 @@ export interface User {
   /** 头像 */
   avatar: string;
 }
+
 // 短信验证码类型，登录|注册|修改手机号|忘记密码|绑定手机号
 export type CodeType = "login" | "register" | "changeMobile" | "forgetPassword" | "bindMobile";
+
 // 个人中心获取数据的类型
 export interface UserInfo {
   couponNumber: number;
@@ -32,3 +34,23 @@ export interface UserInfo {
     finishedNumber: number;
   };
 }
+
+//患者列表类型
+export interface Patient {
+  /** 患者ID */
+  id: string;
+  /** 患者名称 */
+  name: string;
+  /** 身份证号 */
+  idCard: string;
+  /** 0不默认  1默认 */
+  defaultFlag: 0 | 1;
+  /** 0 女  1 男 */
+  gender: 0 | 1;
+  /** 性别文字 */
+  genderValue: string;
+  /** 年龄 */
+  age: number;
+}
+
+export type PatientList = Patient[];

@@ -9,7 +9,7 @@ import { onUnmounted } from "vue";
 const route = useRoute();
 const router = useRouter();
 const store = useUserStore();
-const mobile = ref("13230000005");
+const mobile = ref("13230000001");
 const password = ref("abc12345");
 const argee = ref(false);
 const isPass = ref(true);
