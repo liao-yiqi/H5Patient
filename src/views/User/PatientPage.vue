@@ -17,24 +17,37 @@ const options = [
 //打开侧滑栏
 const show = ref(false);
 const showPopup = () => {
+  patient.value = { ...patientBackup };
   show.value = true;
 };
 //关闭侧滑栏
 const closePopup = () => {
   show.value = false;
 };
-const patient = ref<Patient>({
+//清空表单
+const patientBackup = {
   name: "",
   idCard: "",
   gender: 1,
   defaultFlag: 0
+};
+const patient = ref({
+  ...patientBackup
 });
 //计算属性处理默认值
+// patient.defaultFlag 是个数字
+// 但是组件库要求的是个布尔值,
+// 做一个计算属性进行转换,
+// 因为处理操作是双向, 比起之前的纯读取, 现在也要处理修改的部分
 const defaultFlag = computed({
   get() {
+    // 计算属性被读取时的操作
     return patient.value.defaultFlag === 1 ? true : false;
   },
   set(value) {
+    // 当这个计算属性绑定的数据要背改掉的时候, 进行的操作
+    // 计算属性是派生数据, 依赖别的数据进行计算
+    // 真正修改时, 改的不是计算属性自己, 而是被依赖的数据本体
     patient.value.defaultFlag = value ? 1 : 0;
   }
 });
