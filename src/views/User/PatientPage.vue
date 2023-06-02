@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getPatientList, editPatient } from "@/services/user";
+import { getPatientList, editPatient, delPatient } from "@/services/user";
 import type { PatientList, Patient } from "@/types/user";
 import { onMounted, ref, computed } from "vue";
 import { nameRules, idCardRules } from "@/utils/rules";
@@ -89,6 +89,18 @@ const showEdit = (item?: Patient) => {
   }
   show.value = true;
 };
+//删除功能
+const delPatientInfo = async () => {
+  if (!patient.value.id) return;
+  await showConfirmDialog({
+    title: "温馨提示",
+    message: "是否删除此条信息"
+  });
+  await delPatient(patient.value.id);
+  showSuccessToast("删除成功");
+  show.value = false;
+  getPatient();
+};
 </script>
 
 <template>
@@ -144,6 +156,9 @@ const showEdit = (item?: Patient) => {
           </template>
         </van-field>
       </van-form>
+      <van-action-bar v-if="patient.id">
+        <van-action-bar-button @click="delPatientInfo">删除</van-action-bar-button>
+      </van-action-bar>
     </van-popup>
   </div>
 </template>
@@ -237,5 +252,14 @@ const showEdit = (item?: Patient) => {
 }
 .pb4 {
   padding-bottom: 4px;
+}
+// 底部操作栏
+.van-action-bar {
+  padding: 0 10px;
+  margin-bottom: 10px;
+  .van-button {
+    color: var(--cp-price);
+    background-color: var(--cp-bg);
+  }
 }
 </style>
