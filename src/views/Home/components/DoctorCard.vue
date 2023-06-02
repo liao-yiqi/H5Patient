@@ -1,6 +1,19 @@
 <script lang="ts" setup>
 import type { Doctor } from "@/types/consult";
-
+import { followOrUnfollow } from "@/services/consult";
+import { ref } from "vue";
+const loading = ref(false);
+const follow = async (item: Doctor) => {
+  loading.value = true;
+  try {
+    //修改关注状态
+    await followOrUnfollow(item.id);
+    //强制修改页面关注状态
+    item.likeFlag = item.likeFlag === 1 ? 0 : 1;
+  } finally {
+    loading.value = false;
+  }
+};
 defineProps<{
   item: Doctor;
 }>();
@@ -11,7 +24,9 @@ defineProps<{
     <p class="name">{{ item.name }}</p>
     <p class="van-ellipsis">{{ item.hospitalName }} {{ item.depName }}</p>
     <p>{{ item.positionalTitles }}</p>
-    <van-button round size="small" type="primary">+ 关注</van-button>
+    <van-button :loading="loading" @click="follow(item)" round size="small" type="primary">
+      {{ item.likeFlag === 1 ? "已关注" : "+ 关注" }}
+    </van-button>
   </div>
 </template>
 <style scoped lang="scss">
