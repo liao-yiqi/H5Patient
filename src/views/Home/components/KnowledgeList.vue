@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { KnowledgeType, KnowledgeList } from "@/types/consult";
 import KnowledgeCard from "./KnowledgeCard.vue";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { getKnowledgeList } from "@/services/consult";
 const props = defineProps<{
   type: KnowledgeType;
@@ -12,7 +12,6 @@ const list = ref<KnowledgeList>([]);
 const loading = ref(false);
 const finished = ref(false);
 let pageTotal = 0;
-onMounted(async () => {});
 const onLoad = async () => {
   const { data } = await getKnowledgeList({
     current: current.value,
