@@ -1,4 +1,4 @@
-import type { KnowledgePage, KnowledgeType } from "@/types/consult";
+import type { KnowledgePage, KnowledgeType, DoctorPage } from "@/types/consult";
 import { request } from "@/utils/request";
 
 // 获取知识列表
@@ -13,3 +13,10 @@ export const getKnowledgeList = (options: {
     type: options.type
   });
 };
+
+// 获取关注医生列表
+export const getDoctorPage = (options: { current: number; pageSize: number }) =>
+  request<DoctorPage>("/home/page/doc", "GET", {
+    current: options.current,
+    pageSize: options.pageSize
+  });
