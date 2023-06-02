@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getPatientList } from "@/services/user";
+import { getPatientList, editPatient } from "@/services/user";
 import type { PatientList, Patient } from "@/types/user";
 import { onMounted, ref, computed } from "vue";
 import { nameRules, idCardRules } from "@/utils/rules";
@@ -67,10 +67,27 @@ const submit = async () => {
       message: "性别和身份证号不一致, 确认提交吗?"
     });
   }
-  await addPatient(patient.value);
-  showSuccessToast("添加成功");
+  patient.value.id ? await editPatient(patient.value) : await addPatient(patient.value);
+  patient.value.id ? "编辑成功" : "添加成功";
   getPatient();
-  closePopup();
+  showSuccessToast(patient.value.id ? "编辑成功" : "添加成功");
+};
+//编辑功能
+const showEdit = (item?: Patient) => {
+  // 如果点的是编辑，解构出后台需要的数据
+  if (item) {
+    const { id, gender, name, idCard, defaultFlag } = item;
+    patient.value = {
+      id,
+      gender,
+      name,
+      idCard,
+      defaultFlag
+    };
+  } else {
+    patient.value = { ...patientBackup };
+  }
+  show.value = true;
 };
 </script>
 
@@ -85,7 +102,7 @@ const submit = async () => {
           <span>{{ item.genderValue }}</span>
           <span>{{ item.age }}岁</span>
         </div>
-        <div class="icon"><cp-icon name="user-edit" /></div>
+        <div class="icon" @click="showEdit(item)"><cp-icon name="user-edit" /></div>
         <div class="tag" v-if="item.defaultFlag">默认</div>
       </div>
       <div class="patient-add" v-if="PatientList.length < 6" @click="showPopup()">
@@ -96,7 +113,12 @@ const submit = async () => {
     </div>
     <!-- 侧边栏 -->
     <van-popup v-model:show="show" position="right">
-      <cp-nav-bar @click-right="submit" title="添加患者" right-text="保存" :back="closePopup" />
+      <cp-nav-bar
+        @click-right="submit"
+        :title="patient.id ? '编辑患者' : '添加患者'"
+        right-text="保存"
+        :back="closePopup"
+      />
       <van-form autocomplete="off" ref="form">
         <van-field
           :rules="nameRules"
