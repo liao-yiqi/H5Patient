@@ -1,4 +1,10 @@
-import type { KnowledgePage, KnowledgeType, DoctorPage, FollowType } from "@/types/consult";
+import type {
+  KnowledgePage,
+  KnowledgeType,
+  DoctorPage,
+  FollowType,
+  DeptList
+} from "@/types/consult";
 import { request } from "@/utils/request";
 
 // 获取知识列表
@@ -24,3 +30,6 @@ export const getDoctorPage = (options: { current: number; pageSize: number }) =>
 //关注操作
 export const followOrUnfollow = (id: string, type: FollowType = "doc") =>
   request("/like", "POST", { id, type });
+
+// 获取所有科室
+export const getAllDep = () => request<DeptList>("/dep/all");
