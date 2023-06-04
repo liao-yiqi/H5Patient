@@ -5,6 +5,9 @@ import { onMounted, ref, computed } from "vue";
 import { nameRules, idCardRules } from "@/utils/rules";
 import { showConfirmDialog, type FormInstance, showSuccessToast } from "vant";
 import { addPatient } from "@/services/user";
+import { useRoute } from "vue-router";
+const route = useRoute();
+const isChange = computed(() => route.query.isChange === "1");
 onMounted(() => {
   getPatient();
 });
@@ -105,7 +108,7 @@ const delPatientInfo = async () => {
 
 <template>
   <div class="patient-page">
-    <cp-nav-bar title="家庭档案"></cp-nav-bar>
+    <cp-nav-bar :title="isChange ? '选择患者' : '家庭档案'"></cp-nav-bar>
     <div class="patient-list">
       <div class="patient-item" v-for="item in PatientList" :key="item.id">
         <div class="info">

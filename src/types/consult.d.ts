@@ -80,31 +80,40 @@ export type Image = {
 };
 // 问诊记录
 export type Consult = {
-  /** 问诊记录ID */
   id: string;
-  /** 问诊类型 */
+  // 枚举
   type: ConsultType;
-  /** 快速问诊类型，0 普通 1 三甲 */
-  illnessType: 0 | 1;
-  /** 科室ID */
-  depId: string;
-  /** 疾病描述 */
-  illnessDesc: string;
-  /** 疾病持续时间 */
-  illnessTime: IllnessTime;
-  /** 是否就诊过，0 未就诊过  1 就诊过 */
-  consultFlag: 0 | 1;
-  /** 图片数组 */
-  pictures: Image[];
-  /** 患者ID */
+  // 病人id
   patientId: string;
-  /** 优惠券ID */
+  // 病情描述
+  illnessDesc: string;
+  // 以下两个选项只有 0 或 1
+  // 问诊医院类型
+  illnessType: 0 | 1;
+  // 是否就诊过
+  consultFlag: 0 | 1;
+  // 医生 id
+  docId: string;
+  // 优惠券 id
   couponId: string;
+  // 科室 id
+  depId: string;
+  // 药品列表
+  medicines: Medicine[];
+  // 上传图片
+  pictures: Image[];
+  // 枚举
+  illnessTime: IllnessTime;
 };
 // 问诊记录-全部可选
-export type PartialConsult = Partial<Consult>;
 // Required 转换为全部必须   Partial 转换问全部可选  两个内置的泛型类型
-
+// 常用泛型工具复习 Partial 全部可选, Required 全部必填, Pick 选中其中一些属性, Omit 删除其中一些属性
+export type PartialConsult = Partial<Consult>;
+// 表单数据类型
+export type ConsultIllness = Pick<
+  PartialConsult,
+  "illnessDesc" | "illnessTime" | "consultFlag" | "pictures"
+>;
 // 科室
 export type Department = {
   /** 科室ID */

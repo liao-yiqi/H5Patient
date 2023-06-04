@@ -3,7 +3,8 @@ import type {
   KnowledgeType,
   DoctorPage,
   FollowType,
-  DeptList
+  DeptList,
+  Image
 } from "@/types/consult";
 import { request } from "@/utils/request";
 
@@ -33,3 +34,12 @@ export const followOrUnfollow = (id: string, type: FollowType = "doc") =>
 
 // 获取所有科室
 export const getAllDep = () => request<DeptList>("/dep/all");
+
+/**
+ * 上传图片
+ */
+export const upLoadImgae = (fileData: File) => {
+  const fd = new FormData();
+  fd.append("file", fileData);
+  return request<Image>("/upload", "post", fd);
+};
