@@ -4,7 +4,7 @@ export type KnowledgeType = "like" | "recommend" | "fatReduction" | "food";
 // 知识列表相关
 export interface Knowledge {
   commentNumber: number;
-  likeFlag: number;
+  likeFlag: 0 | 1;
   creatorName: string;
   creatorAvatar: string;
   creatorTitles: string;

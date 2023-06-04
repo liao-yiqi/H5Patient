@@ -1,19 +1,7 @@
 <script lang="ts" setup>
 import type { Doctor } from "@/types/consult";
-import { followOrUnfollow } from "@/services/consult";
-import { ref } from "vue";
-const loading = ref(false);
-const follow = async (item: Doctor) => {
-  loading.value = true;
-  try {
-    //修改关注状态
-    await followOrUnfollow(item.id);
-    //强制修改页面关注状态
-    item.likeFlag = item.likeFlag === 1 ? 0 : 1;
-  } finally {
-    loading.value = false;
-  }
-};
+import { useFollow } from "@/composable";
+const { loading, follow } = useFollow();
 defineProps<{
   item: Doctor;
 }>();
