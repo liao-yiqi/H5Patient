@@ -3,10 +3,13 @@ import { getPatientList, editPatient, delPatient } from "@/services/user";
 import type { PatientList, Patient } from "@/types/user";
 import { onMounted, ref, computed } from "vue";
 import { nameRules, idCardRules } from "@/utils/rules";
-import { showConfirmDialog, type FormInstance, showSuccessToast } from "vant";
+import { showConfirmDialog, type FormInstance, showSuccessToast, showFailToast } from "vant";
 import { addPatient } from "@/services/user";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useConsultStore } from "@/stores";
+const store = useConsultStore();
 const route = useRoute();
+const router = useRouter();
 onMounted(() => {
   getPatient();
 });
@@ -120,6 +123,13 @@ const selectedPatient = (patient: Patient) => {
     patientId.value = patient.id;
   }
 };
+//下一步
+const next = async () => {
+  //数据校验
+  if (!patientId.value) return showFailToast("请先添加患者!");
+  store.setPatient(patientId.value);
+  router.push("/consult/pay");
+};
 </script>
 
 <template>
@@ -153,7 +163,7 @@ const selectedPatient = (patient: Patient) => {
       <div class="patient-tip">最多可添加 6 人</div>
       <!-- 底部按钮 -->
       <div class="patient-next" v-if="isChange">
-        <van-button type="primary" round block>下一步</van-button>
+        <van-button @click="next" type="primary" round block>下一步</van-button>
       </div>
     </div>
 

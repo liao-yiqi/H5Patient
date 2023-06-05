@@ -4,7 +4,9 @@ import type {
   DoctorPage,
   FollowType,
   DeptList,
-  Image
+  Image,
+  ConsultOrderPreParams,
+  ConsultOrderPreData
 } from "@/types/consult";
 import { request } from "@/utils/request";
 
@@ -42,4 +44,10 @@ export const upLoadImgae = (fileData: File) => {
   const fd = new FormData();
   fd.append("file", fileData);
   return request<Image>("/upload", "post", fd);
+};
+/**
+ * 拉去预支付信息
+ */
+export const getConsultOrderPre = (params: ConsultOrderPreParams) => {
+  return request<ConsultOrderPreData>("/patient/consult/order/pre", "GET", params);
 };
