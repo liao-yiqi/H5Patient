@@ -7,7 +7,6 @@ import { showConfirmDialog, type FormInstance, showSuccessToast } from "vant";
 import { addPatient } from "@/services/user";
 import { useRoute } from "vue-router";
 const route = useRoute();
-const isChange = computed(() => route.query.isChange === "1");
 onMounted(() => {
   getPatient();
 });
@@ -15,6 +14,15 @@ const PatientList = ref<PatientList>([]);
 const getPatient = async () => {
   const { data } = await getPatientList();
   PatientList.value = data;
+  // 设置默认选中的ID，当你是选择患者的时候，且有患者信息的时候
+  if (isChange.value && PatientList.value.length) {
+    const defPatient = PatientList.value.find((item) => item.defaultFlag === 1);
+    if (defPatient) {
+      patientId.value = defPatient.id;
+    } else {
+      patientId.value = PatientList.value[0].id;
+    }
+  }
 };
 const options = [
   { label: "男", value: 1 },
@@ -104,13 +112,31 @@ const delPatientInfo = async () => {
   show.value = false;
   getPatient();
 };
+const isChange = computed(() => route.query.isChange === "1");
+//点击选中效果
+const patientId = ref<string>();
+const selectedPatient = (patient: Patient) => {
+  if (isChange.value) {
+    patientId.value = patient.id;
+  }
+};
 </script>
 
 <template>
   <div class="patient-page">
     <cp-nav-bar :title="isChange ? '选择患者' : '家庭档案'"></cp-nav-bar>
+    <div class="patient-change" v-if="isChange">
+      <h3>请选择患者信息</h3>
+      <p>以便医生给出更准确的治疗，信息仅医生可见</p>
+    </div>
     <div class="patient-list">
-      <div class="patient-item" v-for="item in PatientList" :key="item.id">
+      <div
+        class="patient-item"
+        :class="{ selected: patientId === item.id }"
+        v-for="item in PatientList"
+        :key="item.id"
+        @click="selectedPatient(item)"
+      >
         <div class="info">
           <span class="name">{{ item.name }}</span>
           <span class="id">{{ item.idCard.replace(/^(.{6}).+(.{4})$/, "\$1********\$2") }}</span>
@@ -125,7 +151,12 @@ const delPatientInfo = async () => {
         <p>添加患者</p>
       </div>
       <div class="patient-tip">最多可添加 6 人</div>
+      <!-- 底部按钮 -->
+      <div class="patient-next" v-if="isChange">
+        <van-button type="primary" round block>下一步</van-button>
+      </div>
     </div>
+
     <!-- 侧边栏 -->
     <van-popup v-model:show="show" position="right">
       <cp-nav-bar
@@ -264,5 +295,25 @@ const delPatientInfo = async () => {
     color: var(--cp-price);
     background-color: var(--cp-bg);
   }
+}
+.patient-change {
+  padding: 15px;
+  > h3 {
+    font-weight: normal;
+    margin-bottom: 5px;
+  }
+  > p {
+    color: var(--cp-text3);
+  }
+}
+.patient-next {
+  padding: 15px;
+  background-color: #fff;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+  box-sizing: border-box;
 }
 </style>
