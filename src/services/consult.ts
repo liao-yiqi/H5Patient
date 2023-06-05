@@ -6,7 +6,8 @@ import type {
   DeptList,
   Image,
   ConsultOrderPreParams,
-  ConsultOrderPreData
+  ConsultOrderPreData,
+  PartialConsult
 } from "@/types/consult";
 import { request } from "@/utils/request";
 
@@ -50,4 +51,18 @@ export const upLoadImgae = (fileData: File) => {
  */
 export const getConsultOrderPre = (params: ConsultOrderPreParams) => {
   return request<ConsultOrderPreData>("/patient/consult/order/pre", "GET", params);
+};
+
+// 生成订单
+export const createConsultOrder = (data: PartialConsult) => {
+  return request<{ id: string }>("/patient/consult/order", "POST", data);
+};
+
+// 获取支付地址  0 是微信  1 支付宝
+export const getConsultOrderPayUrl = (params: {
+  paymentMethod: 0 | 1;
+  orderId: string;
+  payCallback: string;
+}) => {
+  return request<{ payUrl: string }>("/patient/consult/pay", "POST", params);
 };
