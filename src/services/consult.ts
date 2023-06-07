@@ -7,7 +7,8 @@ import type {
   Image,
   ConsultOrderPreParams,
   ConsultOrderPreData,
-  PartialConsult
+  PartialConsult,
+  ConsultOrderItem
 } from "@/types/consult";
 import { request } from "@/utils/request";
 
@@ -66,3 +67,6 @@ export const getConsultOrderPayUrl = (params: {
 }) => {
   return request<{ payUrl: string }>("/patient/consult/pay", "POST", params);
 };
+
+export const getConsultOrderDetail = (orderId: string) =>
+  request<ConsultOrderItem>("/patient/consult/order/detail", "GET", { orderId });
