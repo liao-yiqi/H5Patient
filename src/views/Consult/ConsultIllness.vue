@@ -3,7 +3,7 @@ import type { ConsultIllness } from "@/types/consult";
 import { IllnessTime } from "@/enums";
 import { ref, computed } from "vue";
 import type { UploaderAfterRead, UploaderFileListItem } from "vant/lib/uploader/types";
-import { upLoadImgae } from "@/services/consult";
+import { uploadImage } from "@/services/consult";
 import { useConsultStore } from "@/stores";
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -34,7 +34,7 @@ const onAfterRead: UploaderAfterRead = async (item) => {
   item.status = "uploading";
   item.message = "上传中";
   //发送请求换取在线地址
-  const { data } = await upLoadImgae(item.file);
+  const { data } = await uploadImage(item.file);
   //上传完毕,将正在上传的状态去除
   item.status = "done";
   item.message = undefined;
