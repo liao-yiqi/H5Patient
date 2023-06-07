@@ -69,6 +69,22 @@ const getConsultFlagText = (flag: 0 | 1) => flagOptions.find((item) => item.valu
         <div class="pao">{{ msg.content }}</div>
       </div>
     </div>
+    <!-- 我发的图片 -->
+    <div class="msg msg-to" v-if="msgType === MsgType.MsgImage && store.user?.id === from">
+      <div class="content">
+        <div class="time">{{ formatTime(createTime) }}</div>
+        <van-image fit="contain" :src="msg.picture?.url" />
+      </div>
+      <van-image :src="store.user?.avatar" />
+    </div>
+    <!-- 医生发的图片 -->
+    <div class="msg msg-from" v-if="msgType === MsgType.MsgImage && store.user?.id !== from">
+      <van-image :src="fromAvatar" />
+      <div class="content">
+        <div class="time">{{ formatTime(createTime) }}</div>
+        <van-image fit="contain" :src="msg.picture?.url" />
+      </div>
+    </div>
   </template>
 </template>
 <style lang="scss" scoped>

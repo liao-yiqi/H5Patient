@@ -42,7 +42,7 @@ export const getAllDep = () => request<DeptList>("/dep/all");
 /**
  * 上传图片
  */
-export const upLoadImgae = (fileData: File) => {
+export const uploadImage = (fileData: File) => {
   const fd = new FormData();
   fd.append("file", fileData);
   return request<Image>("/upload", "post", fd);

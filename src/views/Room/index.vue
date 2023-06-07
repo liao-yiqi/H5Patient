@@ -8,7 +8,7 @@ import { onMounted, onUnmounted, ref, nextTick } from "vue";
 import { baseURL } from "@/utils/request";
 import { useUserStore } from "@/stores";
 import { useRoute } from "vue-router";
-import type { ConsultOrderItem } from "@/types/consult";
+import type { ConsultOrderItem, Image } from "@/types/consult";
 import { MsgType } from "@/enums";
 import type { Message, TimeMessages } from "@/types/room";
 import { getConsultOrderDetail } from "@/services/consult";
@@ -86,13 +86,24 @@ const sendText = (text: string) => {
     msg: { content: text }
   });
 };
+//发送图片
+const sendImage = (img: Image) => {
+  socket.emit("sendChatMsg", {
+    from: store.user?.id,
+    to: consult.value?.docInfo?.id,
+    msgType: MsgType.MsgImage,
+    msg: { picture: img }
+  });
+};
 // 在页面进来的时候就要开始监听聊天新消息的获取
 onMounted(() => {
   socket.on("receiveChatMsg", async (event) => {
     list.value.push(event);
     await nextTick();
-    // 每次有新消息, 都要滑动到页面最底部
-    window.scrollTo(0, document.body.scrollHeight);
+    setTimeout(() => {
+      // 每次有新消息, 都要滑动到页面最底部
+      window.scrollTo(0, document.body.scrollHeight);
+    }, 200);
   });
 });
 </script>
@@ -102,7 +113,11 @@ onMounted(() => {
     <cp-nav-bar title="医生问诊室" />
     <room-status :status="consult?.status" :countdown="consult?.countdown" />
     <room-message :list="list" />
-    <room-action @send-text="sendText" :disabled="consult?.status !== OrderType.ConsultChat" />
+    <room-action
+      @send-text="sendText"
+      @send-image="sendImage"
+      :disabled="consult?.status !== OrderType.ConsultChat"
+    />
   </div>
 </template>
 <style lang="scss" scoped>
