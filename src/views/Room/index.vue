@@ -69,6 +69,7 @@ onMounted(() => {
     nextTick(() => {
       if (initialMsg.value) {
         setTimeout(() => {
+          socket.emit("updateMsgStatus", arr[arr.length - 1].id);
           window.scrollTo(0, document.body.scrollHeight);
           initialMsg.value = false;
         }, 200);
@@ -87,6 +88,7 @@ onMounted(() => {
   socket.on("receiveChatMsg", async (event) => {
     list.value.push(event);
     await nextTick();
+    socket.emit("updateMsgStatus", event.id);
     // 每次有新消息, 都要滑动到页面最底部
     setTimeout(() => {
       window.scrollTo(0, document.body.scrollHeight);
