@@ -176,3 +176,17 @@ export type ConsultOrderItem = Consult & {
   /** 实付款 */
   actualPayment: number;
 };
+
+// 问诊列表相关
+export type ConsultOrderListParams = {
+  current: number;
+  pageSize: number;
+  /** 问诊记录类型 */
+  type: ConsultType;
+};
+
+export type ConsultOrderPage = {
+  pageTotal: number;
+  total: number;
+  rows: ConsultOrderItem[];
+};

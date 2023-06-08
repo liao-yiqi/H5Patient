@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import EvaluateCard from "./EvaluateCard.vue";
 import type { Message } from "@/types/room";
 import { MsgType } from "@/enums";
 
@@ -121,9 +122,16 @@ const showPrescription = async (id: string) => {
           </div>
         </div>
         <div class="foot">
-          <span @click="buy(msg.prescription)">购买药品</span>
+          <span @click="buy">购买药品</span>
         </div>
       </div>
+    </div>
+    <!-- 评价 -->
+    <div
+      class="msg msg-comment"
+      v-if="msgType === MsgType.CardEva || msgType === MsgType.CardEvaForm"
+    >
+      <evaluate-card :evaluateDoc="msg.evaluateDoc" />
     </div>
   </template>
 </template>
